@@ -1,8 +1,18 @@
-﻿@page
+﻿@page 
+
 @model OdeToFood.ListModel
 @{
     ViewData["Title"] = "List";
 }
+
+<!--Razor Pages default with "at-page" only to note it's a Razor Page-->
+<!--And with that comes some other defaults, like how URLs are written.-->
+<!--To let the page understand other URL formats, like default "/Detail?restaurantId=2" vs "/Detail/2"-->
+<!--you need to add some extra code (which you did, requiring an int at the end of the /Detail/)-->
+
+<!--Hmm You tried to make it 'at-page "{restaurantId:int}" just like in the video.-->
+<!--It made the entire /List page give a 404 error. So... something is wrong.-->
+<!--If it ever does work, though, the id of "restaurantId" come from your label of "asp-route-restaurantId="-->
 
 <h1>Restaurants</h1>
 <h3>That defaulted to List, presumably based on the name of the model.</h3>
@@ -37,7 +47,35 @@
             <td>@restaurant.Name</td>
             <td>@restaurant.Location</td>
             <td>@restaurant.Cuisine</td>
+            <td>
+                @*<a class="btn-outline-warning btn-lg" href="/Restaurants/Detail?restaurantId=@restaurant.Id">*@
+                <!--that was one way. another way using asp-page:-->
+                <a class="btn-outline-warning btn-lg" asp-page="./Detail" asp-route-restaurantId="@restaurant.Id">
+                    <i class="glyphicon glyphicon-zoom-in">Details</i>
+                </a>
+            </td>
         </tr>
     }
 
 </table>
+
+<!--Module Two about Model Binding. We'll start with a form.-->
+<!--"form" tabtab--> <!--starts with POST but we want GET-->
+<!--the html is where you set up to get what a user inputs. this is just a search bar.-->
+<!--IRestaurantData is where you'll start the logic for what to do with the search.-->
+<form method="get">
+    <div class="form-group">
+        <div class="input-group">
+            @*<input type="search" class="form-control" value="" name="searchTerm"/>*@
+            <!--searchTerm is what will link this input to the logic that you also name searchTerm-->
+            <input type="search" class="form-control" asp-for="SearchTerm" />
+            <!--instead of searchTerm as input only, you have SearchTerm as input/output.-->
+            <span class="input-group-btn">
+                <button class="btn btn-default">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+
+</form>

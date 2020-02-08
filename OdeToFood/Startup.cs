@@ -36,7 +36,7 @@ namespace OdeToFood
             //later in the course this will get swapped with a real DB.
 
             services.AddRazorPages(); //this was the only boilerplate code in 3.1
-            services.AddControllers(); //maybe it's too early for this -- it's from prof's final code.
+            services.AddControllers(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

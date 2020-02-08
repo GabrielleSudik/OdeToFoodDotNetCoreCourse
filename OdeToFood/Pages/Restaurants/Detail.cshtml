@@ -1,0 +1,27 @@
+﻿@page
+@model OdeToFood.DetailModel
+@{
+    ViewData["Title"] = "Detail";
+}
+
+@*<h1>Detail</h1>*@
+
+<!--so you have the detail pages working, and showing all details.-->
+<!--what if someone gets smart and tries to /Detail/10, a number out of range?-->
+<!--without more code, they'll get a stack trace. We don't want that.-->
+<!--check out the .cs file OnGet() method for adding an if statement to catch errors.-->
+
+
+
+<h2>@Model.Restaurant.Name</h2>
+<div>
+    Id: @Model.Restaurant.Id
+</div>
+<div>
+    Location: @Model.Restaurant.Location
+</div>
+<div>
+    Type: @Model.Restaurant.Cuisine
+</div>
+
+<a asp-page="./List" class="btn btn-default">List of all restaurants</a>

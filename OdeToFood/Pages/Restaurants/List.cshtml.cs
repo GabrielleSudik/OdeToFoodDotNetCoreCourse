@@ -29,18 +29,39 @@ namespace OdeToFood
 
         public string Message2 { get; set; }
         public IEnumerable<Restaurant> Restaurants { get; set; }
+        
+        [BindProperty(SupportsGet = true)] //turns the property from merely an output model to a dual input/output model
+        public string SearchTerm { get; set; } //this is used in conjunction with an input model searchTerm
+            //so it can be an output model as well.
 
-        public void OnGet() //empty OnGet() method was boilerplate.
+        public void OnGet(string searchTerm) //empty OnGet() method was boilerplate.
+            //we added a parameter in module two, to take in what data a user enters into a form.
+            //"searchTerm" is what we named the data in the html's form.
+            //it just has to be in both places.
         {
             Message = "Hello, Madames.";
             Message2 = config["Message"]; //checks appsettings.json, to see the value of "Message"
-            //those two were just for testing/learning how this work.
+                                          //those two were just for testing/learning how this work.
+
+            //Model Binding lesson:
+            //HttpContext is the class(?) that handles data in http requests and responses.
+            //But... We're not using it here for some reason??
+            //HttpContext.Request....
 
             //our real goal in this app is showing a list of the restaurants.
             //so we set the Restaurants property (defined above) to something that will actually get the list:
-            Restaurants = restaurantData.GetAll();
             //restaurantData refers to the IRestaurantData interface (this looks familiar)
             //and GetAll() comes from the method that implements it -- InMemoryRestaurantData class.
+            //Restaurants = restaurantData.GetAll(); //commented out/updated for module two
+
+            //Restaurants = restaurantData.GetRestaurantsByName(searchTerm); //used when searchTerm was input only.
+            Restaurants = restaurantData.GetRestaurantsByName(SearchTerm); //used when SearchTerm is input and output.
+
+            //prof idea: searchTerm is an "input model" and Message and Restaurants are "output models"
+            //what if you want searchTerm to be both (eg, to keep the searchTerm showing in the
+            //search field even after the user hits the search button)?
+            //A: add a new output model / property: SearchTerm and set [BindProperty] attribute.
+            //in the html, check asp-for, which alerts the code it is both input and output.
         }
     }
 }

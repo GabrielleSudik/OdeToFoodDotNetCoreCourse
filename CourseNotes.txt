@@ -25,3 +25,33 @@ It's a .Net Core Class Library. OdeToFood.Core, for core functions.
 Add another project that will provide our data, in lieu of a DB.
 Also .Net Core Class Library. OdeToFood.Data.
 Add a file type: interface.
+
+Model Binding:
+It's how asp.net Core finds info in response to requests.
+Two general ways to get to data:
+Type in an exact URL or hit a link;
+Get input from a user and passing that info to some logic to return the right thing.
+
+HttpContext:
+It's in every web page that sends data back and forth and/or makes calls.
+It contains info about both the request and response.
+Check List.cshtml.cs to see it in action.
+
+Strings as null vs ints as errors:
+Pretend you have a http request method like:
+public void OnGet(string searchTerm) { //stuff }
+If the user passes in nothing, string will default to null and all results are returned.
+If the code wants an int, however, and the user passes in nothing,
+there will be an error because string is a reference and will default to null,
+but int is a value and won't default to null.
+
+More Model Binding: 
+searchTerm and SearchTerm in your code are examples of
+"input property" where the code only takes in info,
+and "two way property" where the code takes in and puts out the same info.
+
+A note on the URL field:
+It often doesn't show the full route unless you click inside of it,
+especially when it returns results. Eg:
+https://localhost:44390/Restaurants/Detail?restaurantId=2 (shows when you click the field)
+https://localhost:44390/Restaurants/Detail (shows to your eyes)
