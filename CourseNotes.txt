@@ -1,0 +1,27 @@
+Asp.Net Core Fundamentals
+by Scott Allen on Pluralsight.
+Watched Feb 2020, recorded earlier.
+
+I'm using 3.1; his lessons are in 2.1 but things are similar so far.
+
+Adding new items:
+Are you know, you can right click, add items.
+You can also use CMD. With some package you'll need to download.
+
+"dotnet aspnet-codegenerator"
+You need to install it (instructions are on OdeToFood github).
+Examples: generate areas, controllers, identities, razorpages, views.
+"dotnet aspnet-codegenerator razorpage List Empty -udl -outDir Pages\Restaurants\"
+That's just an example of creating a razor page,
+naming it, and giving some instructions.
+-h for help.
+
+Add a new project.
+(You could do anything at all in your code, but creating a new project
+both teaches something new and you could re-use the code in another solution.
+I wonder how often that actually happens?)
+It's a .Net Core Class Library. OdeToFood.Core, for core functions.
+
+Add another project that will provide our data, in lieu of a DB.
+Also .Net Core Class Library. OdeToFood.Data.
+Add a file type: interface.

@@ -1,0 +1,43 @@
+﻿@page
+@model OdeToFood.ListModel
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>Restaurants</h1>
+<h3>That defaulted to List, presumably based on the name of the model.</h3>
+
+<p>
+    The at signs are directives. At-page means it's a Razor Page. At-model identifies the model -- ie,
+    this will show an instance of the ListModel class. The ListModel class is found in the .cs file behind this page.
+</p>
+<p>More generally, the at sign shows a transition between writing html and C#.</p>
+<p>So this page is like the view in MVC and the .cs file is like the model.</p>
+<br />
+
+@Model.Message
+<!--That references the matching model (the .cs file) and does the thing.-->
+<!--Another example... Check appsettings.json where you added a Message.-->
+<!--Next, check the .cs where you added a constructor that will bring in the configuration.
+    Too bad it's not more clear that config is appsettings.json, but now you know.-->
+<!--In that OnGet() method, you've addede a new Message2 that says "check the config for the key Message-->
+@Model.Message2
+
+<br />
+
+<!--After you set up the .cs with some logic to GetAll(), the data is available to display here.-->
+<!--Note how you're switching back a forth between html and CS here.-->
+<!--Restaurants refers to Restaurants = restaurantData.GetAll(); in the .cs-->
+<!--.Name etc are the properties of each one.-->
+<h1>List of restaurants</h1>
+<table class="table">
+    @foreach (var restaurant in Model.Restaurants)
+    {
+        <tr>
+            <td>@restaurant.Name</td>
+            <td>@restaurant.Location</td>
+            <td>@restaurant.Cuisine</td>
+        </tr>
+    }
+
+</table>
