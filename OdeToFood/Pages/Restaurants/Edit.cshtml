@@ -10,9 +10,8 @@
 <h2>Editing @Model.Restaurant.Name</h2>
 
 <form method="post">
-    <!--Post for edit/update-->
 
-    <input type="hidden" asp-for="Restaurant.Id" /> <!--asp-for takes the place of both NAME and VALUE-->
+    <input type="hidden" asp-for="Restaurant.Id" /> 
     <div class="form-group">
         <label asp-for="Restaurant.Name"></label>
         <input asp-for="Restaurant.Name" class="form-control" />
@@ -28,11 +27,6 @@
         <select class="form-control" asp-for="Restaurant.Cuisine" asp-items="Model.Cuisines">
         </select>
         <span class="text-danger" asp-validation-for="Restaurant.Cuisine"></span>
-
-        <!--Cuisines is different. It's actually not as simple as calling Model.Cuisine, like Model.Name
-        because we wanted to give the user the choices from the enum only.
-        Check the .cs to see how IHtmlHelper is used to create a list of the enums for the html,
-        and how we create a new property "Cuisines" which is what is referenced here.-->
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 

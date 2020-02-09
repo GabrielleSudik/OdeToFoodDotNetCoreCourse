@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OdeToFood.Data;
-
-//this file starts as boilerplate. it's what happens when the app first starts.
 
 namespace OdeToFood
 {
@@ -23,23 +22,26 @@ namespace OdeToFood
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        //Basically, this method asks, what all do you need to get your app going? Ie, the services.
         public void ConfigureServices(IServiceCollection services)
         {
-            //let's first tell it we want a singleton:
-            //Note we want a singleton ONLY because we're using in-memory data 
-            //ie, the .Data project which is our fake database.
-            //You wouldn't want it with a real DB.
-            services.AddSingleton<IRestaurantData, InMemoryRestaurantData>();
+            //this line was written when we used in the in-code/in-memory data (no DB connected)
+            //services.AddSingleton<IRestaurantData, InMemoryRestaurantData>();
 
-            //later in the course this will get swapped with a real DB.
+            //we write this when using EF and the DB:
+            //note reference to both your DbContext class(es)
+            //and to the ConnectionString key from appsettings.json
+            services.AddDbContextPool<OdeToFoodDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("OdeToFoodDb"));
+            }
+            );
+            //and change from Singleton to Scoped, and from InMemoryData to Sql data:
+            services.AddScoped<IRestaurantData, SqlRestaurantData>();
 
-            services.AddRazorPages(); //this was the only boilerplate code in 3.1
+            services.AddRazorPages(); 
             services.AddControllers(); 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -49,7 +51,6 @@ namespace OdeToFood
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

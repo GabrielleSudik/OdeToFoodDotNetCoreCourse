@@ -4,14 +4,6 @@
     ViewData["Title"] = "Detail";
 }
 
-@*<h1>Detail</h1>*@
-
-<!--so you have the detail pages working, and showing all details.-->
-<!--what if someone gets smart and tries to /Detail/10, a number out of range?-->
-<!--without more code, they'll get a stack trace. We don't want that.-->
-<!--check out the .cs file OnGet() method for adding an if statement to catch errors.-->
-
-
 
 <h2>@Model.Restaurant.Name</h2>
 <div>
@@ -24,11 +16,9 @@
     Type: @Model.Restaurant.Cuisine
 </div>
 
-<!--TempData Message, originating in Edit.cshtml.cs-->
 @if(Model.Message != null)
 {
     <div class="alert alert-info">@Model.Message</div>
 }
-<!--FYI refreshing that page won't show the Message because it is temp only. Nice.-->
 
 <a asp-page="./List" class="btn btn-default">List of all restaurants</a>

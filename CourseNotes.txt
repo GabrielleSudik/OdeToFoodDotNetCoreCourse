@@ -1,6 +1,8 @@
 Asp.Net Core Fundamentals
 by Scott Allen on Pluralsight.
 Watched Feb 2020, recorded earlier.
+Part Two
+(Part One is in another repo; you wanted to clean up your notes before continuing.)
 
 I'm using 3.1; his lessons are in 2.1 but things are similar so far.
 
@@ -10,6 +12,7 @@ You can also use CMD. With some package you'll need to download.
 
 "dotnet aspnet-codegenerator"
 You need to install it (instructions are on OdeToFood github).
+The dotnet part comes with your dotnet installs, which you didn't have to set up.
 Examples: generate areas, controllers, identities, razorpages, views.
 "dotnet aspnet-codegenerator razorpage List Empty -udl -outDir Pages\Restaurants\"
 That's just an example of creating a razor page,
@@ -70,3 +73,114 @@ Otherwise, the form might be updated twice by accident, etc.
 So typical coding patterns will do the update, then redirect the user
 to the "get" version of the same data. Ie, the same uneditable form, showing the new edits.
 
+--- Part Two Notes ---
+
+In the prof's scaffolding of 2.1, EntityFramework was automatically included as packages,
+at least in the main project. It doesn't show up in mine BUT a couple of
+Net Core frameworks are there; maybe EF is automatically inside of those??
+
+In the Data package, install EntityFrameworkCore and EntityFrameworkCore.SqlServer packages.
+And EntityFrameworkCore.Design.
+You can see all of your packages and their versions and other project info in the .csproj file.
+However, I don't know where those are... 
+I had to find them by searching for package name in find-all.
+
+EF Core supports various databases. 
+"Relatively easy"
+Implement a class that derives from the DbContext class,
+then add properties containing the info you want EF to store in the Db.
+
+In .Data project: Add a new class OdeToFoodDbContext.cs
+It will inherit from DbContext, which is the class that takes our properties
+and makes them CRUD in the DB.
+The process of setting up the DB is "migration".
+You'll need the CMD dotnet tool. Just go to the top file of the relevant project...
+
+"dotnet --help" "dotnet --info" "dotnet build" etc. We want
+"dotnet ef".
+
+Oops you had to install that with "dotnet tool install --global dotnet-ef"
+
+"dotnet ef dbcontext list" successfully finds your OdeToFoodDbContext.
+"dotnet ef dbcontext info" gives an error until we've identified the DB we'll use.
+
+Connecting to DBs is a "tricky part". Greaaaaat.
+
+View -- SQL Server Object Explorer: Looks like the insider of SSMS.
+You can see what DBs you already have.
+You'll want "(localdb)\MSSQLLocalDB" (or presumably whatever enterprise DB at work).
+We'll configure the connection string, so the code knows where to look.
+
+appsettings.json! (in main project)
+Basically, you the location, the name of the database, and security setting.
+  "ConnectionStrings": {
+    "OdeToFoodDb":  "Data Source=(localdb)\\MSSQLLocalDb; Initial Catalog=OdeToFood; Integrated Security=True;"
+  }
+This is a key (OdeToFood) value (the long string) pair.
+The security bit is currently just set to your windows login.
+A real app might have something different.
+
+How does the ConnectionString(s) find your DbContexts?
+Startup.cs!  ... the services.AddDbContextPool stuff
+
+And finally, the constructor in your DbContext classes will inject some options,
+which apparently include the final link to your Db.
+
+Database migrations:
+"dotnet ef dbcontext info" gives a new error.
+In our case, it's because our DbContext class is 
+in a different project than Startup and appsettings.
+(Strangely, prof's error message gives a specific way to fix it;
+mine gives a URL to go read about patterns.)
+Our solution: Just tell the starting project that data is in .Data project.
+
+"dotnet ef dbcontext info -s ..\OdeToFood\OdeToFood.csproj"
+gives an error that starting project doesn't know EF (as I suspected!).
+(But wait... more errors that don't make sense. )
+(It took "dotnet add package Microsoft.EntityFrameworkCore.Design" instead of the Nuget way.)
+
+Result will look something like:
+
+Build started...
+Build succeeded.
+Provider name: Microsoft.EntityFrameworkCore.SqlServer
+Database name: OdeToFood
+Data source: (localdb)\MSSQLLocalDb
+Options: MaxPoolSize=128
+
+And that looks like.
+
+Migrations are about keeping the DB schemas in sync with the models in the code.
+We start with the Restaurants DbSet, and we want to create a Db scheme based on it.
+Every time you add or update a model (the entities), you want to run an 
+entity migration to update the Db.
+
+"dotnet ef migrations"
+"dotnet ef migrations add initialcreate -s ..\OdeToFood\OdeToFood.csproj" 
+initialcreate is what you named this.  it can be whatever you want.
+S for startup. The path is to your startup project.
+This command creates C# code that will tell the Db what to do (like, create a table).
+Results:
+
+Build started...
+Build succeeded.
+Done. To undo this action, use 'ef migrations remove'
+
+Look in OdeToFood.Data project (or wherever your DbContext is) -- Migrations folder.
+Files are named on datetime.
+It's actually an API, with code that creates your table(s), including
+columns, keys, constraints, etc.
+
+Next step: run the migration so the Db will update.
+"dotnet ef database"
+"dotnet ef database update -s ..\OdeToFood\OdeToFood.csproj" will update the Db.
+--verbose to see it all happen
+Results:
+
+Build started...
+Build succeeded.
+Done.
+
+Check your list of DBs in SQL Server Object Explorer. Your Db will be there.
+You can view columns, etc, like normal.
+dbo._EFMigrationsHistory --> contains history of all migrations to the Db.
