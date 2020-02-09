@@ -55,3 +55,11 @@ It often doesn't show the full route unless you click inside of it,
 especially when it returns results. Eg:
 https://localhost:44390/Restaurants/Detail?restaurantId=2 (shows when you click the field)
 https://localhost:44390/Restaurants/Detail (shows to your eyes)
+
+On choosing where to put logic or get data:
+A few times, prof has shown a way to use html, especially asp.net stuff, right in the html.
+But he always backtracks and says the better choice is to put it in the .cs instead.
+Then just reference it in the html.
+
+asp.net Core is stateless. There is no place it just automatically updates data.
+You need to do it yourself.

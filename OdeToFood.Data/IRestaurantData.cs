@@ -15,6 +15,8 @@ namespace OdeToFood.Data
         //IEnumerable<Restaurant> GetAll(); //this was the code for module 1
         IEnumerable<Restaurant> GetRestaurantsByName(string name); //module 2 model binding
         Restaurant GetRestaurantById(int id); //module 2 getting details by restaurant id
+        Restaurant Update(Restaurant updatedRestaurant); //module 3 updating data
+        int Commit(); //module 3 we'll use this to track changes to the data
     }
 
     public class InMemoryRestaurantData : IRestaurantData
@@ -63,6 +65,27 @@ namespace OdeToFood.Data
             //looking for an Id that matches id.
         }
         //next move to Detail.cshtml.cs
+
+        //module three - updating data:
+        public Restaurant Update(Restaurant updatedRestaurant)
+        {
+            var restaurant = restaurants.SingleOrDefault(r => r.Id == updatedRestaurant.Id);
+            //ie, check the range of all restaurants and find the matching item.
+            if (restaurant != null)
+            {
+                restaurant.Name = updatedRestaurant.Name;
+                restaurant.Location = updatedRestaurant.Location;
+                restaurant.Cuisine = updatedRestaurant.Cuisine;
+                //just a simple re-naming of relevant data.
+            }
+
+            return restaurant;
+        }
+
+        public int Commit()
+        {
+            return 0; //for now, so intellisense doesn't complain.
+        }
     }
 }
 
