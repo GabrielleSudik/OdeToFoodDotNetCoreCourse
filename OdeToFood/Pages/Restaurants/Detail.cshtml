@@ -24,4 +24,11 @@
     Type: @Model.Restaurant.Cuisine
 </div>
 
+<!--TempData Message, originating in Edit.cshtml.cs-->
+@if(Model.Message != null)
+{
+    <div class="alert alert-info">@Model.Message</div>
+}
+<!--FYI refreshing that page won't show the Message because it is temp only. Nice.-->
+
 <a asp-page="./List" class="btn btn-default">List of all restaurants</a>

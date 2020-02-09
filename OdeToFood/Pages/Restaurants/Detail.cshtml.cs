@@ -20,6 +20,9 @@ namespace OdeToFood
         public Restaurant Restaurant { get; set; }
         public readonly IRestaurantData restaurantData;
 
+        [TempData]//flags this property for the TempData called "Message" coming from Edit.cshtml.cs.
+        public string Message { get; set; } 
+
         //make a constructor
         //you're injecting the restaurant data here,
         //to be used in OnGet() below.

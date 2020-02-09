@@ -17,6 +17,7 @@ namespace OdeToFood.Data
         Restaurant GetRestaurantById(int id); //module 2 getting details by restaurant id
         Restaurant Update(Restaurant updatedRestaurant); //module 3 updating data
         int Commit(); //module 3 we'll use this to track changes to the data
+        Restaurant Add(Restaurant newRestaurant); //module 3, to add new ones.
     }
 
     public class InMemoryRestaurantData : IRestaurantData
@@ -85,6 +86,17 @@ namespace OdeToFood.Data
         public int Commit()
         {
             return 0; //for now, so intellisense doesn't complain.
+        }
+
+        //module 3. add a new restaurant to the list of them,
+        //assign the next available Id to its id.
+        //WARNING! the Id assignment line should ONLY be used while we supply our data here in the code.
+        //a real DB has its own way of assigning Ids, we don't want to mess with that.
+        public Restaurant Add(Restaurant newRestaurant)
+        {
+            restaurants.Add(newRestaurant);
+            newRestaurant.Id = restaurants.Max(r => r.Id) + 1;
+            return newRestaurant;
         }
     }
 }

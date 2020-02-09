@@ -63,3 +63,10 @@ Then just reference it in the html.
 
 asp.net Core is stateless. There is no place it just automatically updates data.
 You need to do it yourself.
+
+"Post Redirect Get" pattern:
+When a user makes an update to something, it's not safe to leave the user on that page.
+Otherwise, the form might be updated twice by accident, etc.
+So typical coding patterns will do the update, then redirect the user
+to the "get" version of the same data. Ie, the same uneditable form, showing the new edits.
+
